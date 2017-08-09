@@ -1,12 +1,15 @@
 /* linked-list.js
  * A minimalist implementation of a Linked List inspired by the Java LinkedList.
  */
+var Collections = Collections || {};
+
+!function(){
 var LinkedList = function() {
     this.first = null;
     this.last = null;
     this.add = function(data) {
         var currentItem = createElement(data);
-        if(this.first === null){
+        if(!this.first){
             this.first = currentItem;
             this.last = currentItem;
         } else {
@@ -17,7 +20,7 @@ var LinkedList = function() {
     };
     this.concat = function(concatList){
         if(concatList instanceof LinkedList) {
-            for(var item in concatList) 
+            for(var item of concatList) 
             {
                 this.add(item);
             }
@@ -36,7 +39,7 @@ var LinkedList = function() {
     };
     this.clear = function() {
         //Clear the chain first
-        for(var currentItem in this) {
+        for(var currentItem of this) {
             currentItem.before.after = null;
             currentItem.before = null;
         }
@@ -44,32 +47,39 @@ var LinkedList = function() {
         this.last = null;
     };
     this.getFirst = function() {
-        return this.first;
+        return this.first.data;
     };
     this.getLast = function() {
-        return this.last;
+        return this.last.data;
     };
-    this[Symbol.iterator]= function () {
-        var current;
+    
+    this[Symbol.iterator] = function () {
+        var ref = this;
         return {
             next: function () {
-                if(current == null) {
-                    current = this.first;
-                    return { key: this._index, value: current.data, done: false};
-                }
-                if(current.after !== null )
+                if(!this._current) {
+                    var rtv;
+                    this._current = this._ref.first;
+                    rtv =  { value: this._current.data, done: false};
+                    return rtv;
+                } else if(this._current !== this._ref.last)
                 {
-                    return {key: this._index, value: current.after(), done: false };
-                }
-                else
+                    var rtv;
+                    this._current = this._current.after;
+                    rtv = { value: this._current.data, done: false };
+                    return rtv;
+                } else
                 {
-                    return{ done: true }; 
+                    var rtv = { value:this._current, done: true };
+                    return rtv;
                 }
-            }
+            },
+            _current: null,
+            _ref: ref
         }
     };
     this.remove = function(data) {
-        for(var currentItem in this) {
+        for(var currentItem of this) {
             var previous = currentItem.before;
             var next = currentItem.after;
             if(currentItem.data === data) {
@@ -78,12 +88,12 @@ var LinkedList = function() {
             }
         }
     };
-    this.toArray = function() {
-        var asArray = [];
-        for(var currentItem in this) {
-            asArray.push(currentItem);
+    this.asArray = function() {
+        var theArray = [];
+        for(var currentItem of this) {
+            theArray.push(currentItem);
         }
-        return asArray;
+        return theArray;
     };
     function createElement(data) {
         return {
@@ -92,4 +102,10 @@ var LinkedList = function() {
             data : data
         };
     }
-};
+}
+    Collections.LinkedList = LinkedList;
+    if(typeof exports !== 'undefined')
+    {
+        exports.Collections = Collections;
+    }
+}();
