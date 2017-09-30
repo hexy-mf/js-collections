@@ -52,3 +52,48 @@ QUnit.test("Add Multiple Objects And AsArray", function (assert) {
     var asArray = linkedList.asArray();
     assert.deepEqual(asArray,testStrings);
 });
+QUnit.test("Remove Objects", function(assert) {
+    var linkedList = new Collections.LinkedList();
+    for(let dataPoint of testStrings)
+    {
+        linkedList.add(dataPoint);
+    }
+    var random = Math.round(Math.random() * testStrings.length);
+    linkedList.remove(testStrings[random]);
+    assert.notEqual(linkedList.asArray().indexOf(testStrings[random]), -1);
+});
+QUnit.test("Concatenate Lists", function(assert) {
+    var expectedLen = (testStrings.length * 2);
+    var linkedList = new Collections.LinkedList();
+    var linkedList2 = new Collections.LinkedList();
+    for(let dataPoint of testStrings)
+    {
+        linkedList.add(dataPoint);
+        linkedList2.add(dataPoint);
+    }
+    var len = linkedList.asArray().length
+    assert.equal(len, testStrings.length);
+    linkedList.concat(linkedList2);
+    assert.equal(expectedLen, linkedList.asArray().length);
+});
+QUnit.test("Add To First", function(assert){
+   var firstItem = "This is the first item in the array"
+   var linkedList = new Collections.LinkedList();
+   for(let dataPoint of testStrings)
+   {
+       linkedList.add(dataPoint);
+   }
+   linkedList.addFirst(firstItem);
+   var actual = linkedList.getFirst();
+   assert.equal(actual, firstItem);
+});
+QUnit.test("Clear", function(assert){
+    var linkedList = new Collections.LinkedList();
+    for(let dataPoint of testStrings)
+    {
+        linkedList.add(dataPoint);
+    }
+    assert.equal(linkedList.asArray().length, testStrings.length);
+    linkedList.clear();
+    assert.equal(linkedList.asArray().length, 0);
+});

@@ -40,8 +40,7 @@ var LinkedList = function() {
     this.clear = function() {
         //Clear the chain first
         for(var currentItem of this) {
-            currentItem.before.after = null;
-            currentItem.before = null;
+            this.remove(currentItem);
         }
         this.first = null;
         this.last = null;
@@ -90,8 +89,12 @@ var LinkedList = function() {
     };
     this.asArray = function() {
         var theArray = [];
-        for(var currentItem of this) {
-            theArray.push(currentItem);
+        if(this.first != null)
+        {
+            for(var currentItem of this) 
+            {
+                theArray.push(currentItem);
+            }
         }
         return theArray;
     };
